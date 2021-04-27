@@ -7,6 +7,8 @@ public class HelloWorld {
         */
         // 화면 출력하는 방법
         System.out.println("Hello Java");
+        
+        System.out.println("안녕 자바");
         // 프로그램 끝
     }
 }
