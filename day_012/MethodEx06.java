@@ -13,7 +13,8 @@ class Method{
     static void dofunc_2(){
         System.out.println("doFunc_2()");
 
-        // System.out.println(this.instanceVariable); // non-static variable this cannot be referenced from a static context
+        // non-static variable this cannot be referenced from a static context
+        // System.out.println(this.instanceVariable); 
         System.out.println(Method.staticVariable);
     }
 }
