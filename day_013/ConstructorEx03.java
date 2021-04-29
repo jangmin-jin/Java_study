@@ -34,7 +34,7 @@ public class ConstructorEx03{
 
         // Constructor c1 = new Constructor();
         Constructor c1 = new Constructor("박문수");
-        System.out.println(c1.data1);
-        System.out.println(c1.data2);
+        System.out.println(c1.data1);     // 값1
+        System.out.println(c1.data2);     // 박문수
     }
 }

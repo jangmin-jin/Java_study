@@ -29,11 +29,11 @@ public class ConstructorEx02{
         // 디폴트로 선언할 수 없음(값을 넣어줘야함)
         // 디폴트로만 가능한 Constructor가 실행됨
         Constructor c1 = new Constructor();
-        System.out.println(c1.data1);
-        System.out.println(c1.data2);
+        System.out.println(c1.data1);    // 값1
+        System.out.println(c1.data2);    // 값2
 
         Constructor c2 = new Constructor("장선우", "장자인");
-        System.out.println(c2.data1);
-        System.out.println(c2.data2);
+        System.out.println(c2.data1);    // 장선우
+        System.out.println(c2.data2);    // 장자인
     }
 }
