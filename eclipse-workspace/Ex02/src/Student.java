@@ -22,9 +22,9 @@ public class Student {
 	}
 	
 	// getter도 부분적으로 만들어 줄 수 있다.
-	public Student(String name, int age) {
+	public Student(String name, String hakbun) {
 		this.name = name;
-		this.age = age;
+		this.hakbun = hakbun;
 	}
 
 	public String getHakbun() {
