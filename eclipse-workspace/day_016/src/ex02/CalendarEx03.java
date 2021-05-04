@@ -2,7 +2,7 @@ package ex02;
 
 import java.util.Calendar;
 
-public class CalenderEx03 {
+public class CalendarEx03 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
