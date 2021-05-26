@@ -106,7 +106,7 @@ public class SearchZipcodeEx03 extends JFrame {
 					String sql = "select distinct dong from zipcode where sido='" + cbox1.getSelectedItem() +"' and gugun ='"+ cbox2.getSelectedItem() + "'";
 					String result = searchZipcode(sql, dong);
 					
-					// 반환된 결과를 배열에 저장후 곰보박스3 (동) 에 추가
+					// 반환된 결과를 배열에 저장후 콤보박스3 (동) 에 추가
 					String[] resultArr = result.split(",");
 					for(int i=0; i<resultArr.length; i++) {
 						cbox3.addItem(resultArr[i]);
