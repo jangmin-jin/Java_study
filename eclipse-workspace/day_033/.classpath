@@ -7,5 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/java/JDBC APIs/mariadb-java-client-2.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/java/Jsoup APIs/jsoup-1.13.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
