@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	주석
+	root element는 1개만 ( books )
+	element 열리면 반드시 닫아줘야함
+	element 대소문자 가림
+ -->
+
+<books>
+    <book order="1">
+        <name>모던 웹 디자인을 위한 HTML5 + CSS3 입문</name>
+        <publisher>미디어</publisher>
+        <author>홍길동</author>
+        <price>30000원</price>
+    </book>
+    <book order="2">
+        <name>모던 웹을 위한 JavaScript + JQuery 입문</name>
+        <publisher>미디어</publisher>
+        <author>박문수</author>
+        <price>32000원</price>
+    </book>
+    <book order="3">
+        <name>모던 웹을 위한 Node.js 프로그래밍</name>
+        <publisher>미디어</publisher>
+        <author>이몽룡</author>
+        <price>22000원</price>
+    </book>
+    <book order="4">
+        <name>모던 웹을 위한 HTML5 프로그래밍</name>
+        <publisher>미디어</publisher>
+        <author>방자</author>
+        <price>30000원</price>
+    </book>
+</books>
