@@ -46,6 +46,7 @@ public class ZipcodeDAO {
 			pstmt.setString(1, strDong +"%");
 			
 			rs = pstmt.executeQuery();
+			System.out.println(rs.next());
 			
 			// 2차원 배열형식으로 만들기 위해
 			// ArrayList<String> data에 요소별로 배열 데이터를 추가하여

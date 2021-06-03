@@ -1,0 +1,103 @@
+package project;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class IdCheckDlg extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+	private JTextField textField;
+
+	public String idCheckResult = "";
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			IdCheckDlg dialog = new IdCheckDlg();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public IdCheckDlg() {
+		setTitle("아이디 중복확인");
+		setBounds(100, 100, 220, 150);
+		setLocationRelativeTo(null);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		{
+			JLabel lblNewLabel = new JLabel("아이디 입력");
+			lblNewLabel.setBounds(12, 10, 159, 15);
+			contentPanel.add(lblNewLabel);
+		}
+		{
+			textField = new JTextField();
+			textField.setBounds(12, 35, 159, 21);
+			contentPanel.add(textField);
+			textField.setColumns(10);
+		}
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				JButton okButton = new JButton("확인");
+				okButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						DataDAO dao = new DataDAO();
+						String fieldId = textField.getText();
+						
+						Boolean idCheck = dao.idCheck(fieldId);
+						
+						if(idCheck != true) {
+							JOptionPane.showMessageDialog(IdCheckDlg.this, "중복되는 아이디 입니다.", 
+									"아이디 중복확인", JOptionPane.ERROR_MESSAGE);
+							textField.setText("");
+						}else {
+							idCheckResult = fieldId;
+							JOptionPane.showMessageDialog(IdCheckDlg.this, "사용할 수 있는 아이디 입니다.", 
+									"아이디 중복확인", JOptionPane.PLAIN_MESSAGE);
+							IdCheckDlg.this.dispose();
+						}
+						
+					}
+				});
+				okButton.setActionCommand("OK");
+				buttonPane.add(okButton);
+				getRootPane().setDefaultButton(okButton);
+			}
+			{
+				JButton cancelButton = new JButton("취소");
+				cancelButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						
+						IdCheckDlg.this.dispose();
+					}
+				});
+				cancelButton.setActionCommand("Cancel");
+				buttonPane.add(cancelButton);
+			}
+		}
+	}
+
+}
