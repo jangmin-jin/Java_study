@@ -88,6 +88,7 @@ public class FindIdDlg extends JDialog {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						
+						// textfield에 입력한 값을 담는 변수
 						String name = textFieldName.getText();
 						String juminFront = textFieldJuminFront.getText();
 						String juminBack = new String(textFieldJuminBack.getPassword());
@@ -96,10 +97,12 @@ public class FindIdDlg extends JDialog {
 						DataDAO dao = new DataDAO();
 						String findResult = dao.findId(name, jumin);
 						
+						// 일치하는 정보가 없는 경우 메세지 출력
 						if(findResult == "") {
 							JOptionPane.showMessageDialog(FindIdDlg.this, "일치하는 정보가 없습니다.",
 									"가입 정보 없음", JOptionPane.ERROR_MESSAGE);
 						}else {
+							// 아이디가 여려개면 "/"기준으로 분리하여 한번에 출력해줌
 							JOptionPane.showMessageDialog(FindIdDlg.this, findResult.split("/"),
 									"가입된 아이디", JOptionPane.QUESTION_MESSAGE);
 						}

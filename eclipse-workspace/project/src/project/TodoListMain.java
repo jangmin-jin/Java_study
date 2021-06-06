@@ -35,7 +35,7 @@ public class TodoListMain extends JFrame {
 	private JButton btnDelTodo;
 	
 	/*
-	 *	현재 출력되고 있는 화면 종류
+	 *	listSelect : 현재 출력되고 있는 화면 종류
  	 *	0 - 할일 목록
 	 *	1 - 완료 목록
 	 *	2 - 삭제 목록
@@ -257,6 +257,7 @@ public class TodoListMain extends JFrame {
 					// 삭제목록 - 복구버튼
 					default :
 						if(table.getSelectedRow() < 0) {
+							// 복구 항목이 선택되지 않으면 실행하지 않음.
 							JOptionPane.showMessageDialog(TodoListMain.this, "복구할 항목을 선택 해주세요.",
 									"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
 						}else {
@@ -349,6 +350,7 @@ public class TodoListMain extends JFrame {
 						// 확인 버튼을 눌렀을 시에만 완전 삭제 실행
 						if(del == 0) {
 							if(table.getSelectedRow() < 0) {
+								// 선택된 행이 없을 경우 삭제를 실행하지 않음
 								JOptionPane.showMessageDialog(TodoListMain.this, "완전 삭제할 항목을 선택 해주세요.",
 										"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
 							}else {
@@ -377,6 +379,7 @@ public class TodoListMain extends JFrame {
 						// 선택된 행이 없을시 실행하지 않는다.
 						if(del == 0) {
 							if(table.getSelectedRow() < 0) {
+								// 선택된 행이 없을 경우 삭제를 실행하지 않음
 								JOptionPane.showMessageDialog(TodoListMain.this, "삭제할 항목을 선택 해주세요.",
 										"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
 							}else {
@@ -415,8 +418,8 @@ public class TodoListMain extends JFrame {
 					// 할일 목록 - 완료 목록으로 이동
 					switch (listSelect) {
 					case 0:
-						// 선택된 행이 없을시 실행하지 않는다.
 						if(table.getSelectedRow() < 0) {
+							// 선택된 행이 없을 경우 삭제를 실행하지 않음
 							JOptionPane.showMessageDialog(TodoListMain.this, "완료할 항목을 선택 해주세요.",
 									"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
 							break;

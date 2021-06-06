@@ -1,6 +1,7 @@
 package project;
 
 public class ZipcodeTO {
+	// 우편번호 검색 및 테이블 출력을 위한 TO
 	private String zipcode;
 	private String sido;
 	private String gugun;

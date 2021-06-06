@@ -8,6 +8,7 @@ public class CustomTodoModel extends AbstractTableModel {
 
 	private ArrayList<TodolistTO> datas;
 	
+	// 할일, 입력 날짜, 완료 날짜
 	private String[] columnNames = new String[] {
 			"\uD560\uC77C", "\uC785\uB825 \uB0A0\uC9DC", "\uC644\uB8CC \uB0A0\uC9DC"
 		};
@@ -29,9 +30,6 @@ public class CustomTodoModel extends AbstractTableModel {
 			this.datas = dao.printDeleteTodolist(id);
 			break;
 		}
-		
-		// this.datas = dao.printTodolist(id);
-		// System.out.println("커스텀 모델로 잘 넘어왔어요");
 	}
 	
 	@Override

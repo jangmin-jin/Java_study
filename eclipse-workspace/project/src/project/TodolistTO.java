@@ -1,6 +1,7 @@
 package project;
 
 public class TodolistTO {
+	// 할일 목록, 완료 목록, 삭제 목록 출력을 위한 TO
 	private String id;
 	private String todo;
 	private String time;

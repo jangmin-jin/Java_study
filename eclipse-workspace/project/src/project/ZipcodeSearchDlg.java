@@ -103,13 +103,13 @@ public class ZipcodeSearchDlg extends JDialog {
 						zipcode1 = zipcode[0];
 						zipcode2 = zipcode[1];
 						
+						// 주소는 다 합쳐준다.
 						address = String.format("%s %s %s %s", 
 								(String) table.getValueAt(table.getSelectedRow(), 1),
 								(String) table.getValueAt(table.getSelectedRow(), 2),
 								(String) table.getValueAt(table.getSelectedRow(), 3),
 								(String) table.getValueAt(table.getSelectedRow(), 4));
 						
-						// 창닫기
 						ZipcodeSearchDlg.this.dispose();
 					}
 				});
@@ -122,8 +122,6 @@ public class ZipcodeSearchDlg extends JDialog {
 				cancelButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						
-						// 창닫기
 						ZipcodeSearchDlg.this.dispose();
 					}
 				});

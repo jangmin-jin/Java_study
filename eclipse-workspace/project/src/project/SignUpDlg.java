@@ -171,9 +171,11 @@ public class SignUpDlg extends JDialog {
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
+					// 0번 선택은 공백
 					if(comboBox.getSelectedIndex() == 0) {
 						textFieldEmailBack.setText("");
 					}else {
+						// 이메일 목록을 선택하면 textfield에 자동으로 채워줌
 						textFieldEmailBack.setText((String)comboBox.getSelectedItem());
 					}
 				}
@@ -265,6 +267,7 @@ public class SignUpDlg extends JDialog {
 						String pw = new String(textFieldPW.getPassword());
 						String name = textFieldName.getText().trim();
 						
+						// 성별 판단
 						String sex = "";
 						if(rdbtnWoman.getSelectedObjects() != null) {
 							sex = rdbtnWoman.getText();
@@ -317,7 +320,7 @@ public class SignUpDlg extends JDialog {
 							JOptionPane.showMessageDialog(SignUpDlg.this, "주민번호 혹은 성별을 확인해 주세요.",
 									"성별 불일치", JOptionPane.WARNING_MESSAGE);
 						}else {
-							// 자유 항목들 입력 안했으면 null 주기
+							// 자유 항목들 입력 안했으면 null 값으로 바꿈
 							if(email.length() == 1) {
 								email = null;
 							} 
@@ -360,7 +363,6 @@ public class SignUpDlg extends JDialog {
 				cancelButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						
 						SignUpDlg.this.dispose();
 					}
 				});

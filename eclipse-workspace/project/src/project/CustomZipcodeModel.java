@@ -14,7 +14,7 @@ public class CustomZipcodeModel extends AbstractTableModel {
 	// 최종 결과를 담을 변수 datas 선언
 	private ArrayList<ZipcodeTO> datas;
 	
-	// column들의 이름을 정해준다.
+	// zipcode, sido, gugun, dong, ri, bunji
 	private String[] columnNames = new String[] {
 			"\uC6B0\uD3B8\uBC88\uD638", "\uC2DC\uB3C4", "\uAD6C\uAD70", "\uB3D9", "\uB9AC", "\uBC88\uC9C0"
 		};

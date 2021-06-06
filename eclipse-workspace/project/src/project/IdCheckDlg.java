@@ -66,19 +66,24 @@ public class IdCheckDlg extends JDialog {
 						DataDAO dao = new DataDAO();
 						String fieldId = textField.getText();
 						
+						// 아이디에는 공백이 포함될 수 없습니다.
 						if(fieldId.contains(" ")) {
 							JOptionPane.showMessageDialog(IdCheckDlg.this, "공백은 사용할 수 없습니다.", 
 									"아이디 중복확인", JOptionPane.ERROR_MESSAGE);
+							// 아이디는 공백이 될 수 없습니다.
 						}else if(fieldId.equals("")) {
 							JOptionPane.showMessageDialog(IdCheckDlg.this, "사용할 아이디를 입력하세요.", 
 									"아이디 중복확인", JOptionPane.ERROR_MESSAGE);
 						}else {
+							// 정상인 경우
 							Boolean idCheck = dao.idCheck(fieldId);
 							
+							// 검색결과가 이미 있는 경우 = 중복되는 아이디
 							if(idCheck != true) {
 								JOptionPane.showMessageDialog(IdCheckDlg.this, "중복되는 아이디 입니다.", 
 										"아이디 중복확인", JOptionPane.ERROR_MESSAGE);
 								textField.setText("");
+								// 검색결과가 없는 경우 = 새로운 아이디 (가입가능)
 							}else {
 								idCheckResult = fieldId;
 								JOptionPane.showMessageDialog(IdCheckDlg.this, "사용할 수 있는 아이디 입니다.", 
@@ -98,7 +103,6 @@ public class IdCheckDlg extends JDialog {
 				cancelButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						
 						IdCheckDlg.this.dispose();
 					}
 				});

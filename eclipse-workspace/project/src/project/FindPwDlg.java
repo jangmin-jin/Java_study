@@ -104,15 +104,17 @@ public class FindPwDlg extends JDialog {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						
-						String id = textFieldID.getText();
-						String name = textFieldName.getText();
-						String juminFront = textFieldJuminFront.getText();
-						String juminBack = new String(textFieldJuminBack.getPassword());
+						// textfield에 입력한 값을을 담아줄 변수
+						String id = textFieldID.getText().trim();
+						String name = textFieldName.getText().trim();
+						String juminFront = textFieldJuminFront.getText().trim();
+						String juminBack = new String(textFieldJuminBack.getPassword()).trim();
 						String jumin = juminFront + juminBack;
 						
 						DataDAO dao = new DataDAO();
 						String findResult = dao.findPw(id, name, jumin);
 						
+						// 결과가 없으면 결과없음 출력
 						if(findResult == "") {
 							JOptionPane.showMessageDialog(FindPwDlg.this, "일치하는 정보가 없습니다.",
 									"일치하는 정보 없음", JOptionPane.ERROR_MESSAGE);
@@ -121,7 +123,7 @@ public class FindPwDlg extends JDialog {
 							textFieldJuminFront.setText("");
 							textFieldJuminBack.setText("");
 						}else {
-							JOptionPane.showMessageDialog(FindPwDlg.this, findResult.split("/"),
+							JOptionPane.showMessageDialog(FindPwDlg.this, findResult,
 									"비밀번호 찾기 결과", JOptionPane.QUESTION_MESSAGE);
 							FindPwDlg.this.dispose();
 						}

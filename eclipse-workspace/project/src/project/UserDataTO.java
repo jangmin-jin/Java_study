@@ -1,6 +1,7 @@
 package project;
 
 public class UserDataTO {
+	// 유저 정보를 데이터베이스를 통해 사용하기 위한 TO
 	private String id;
 	private String pw;
 	private String name;

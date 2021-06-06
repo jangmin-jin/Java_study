@@ -117,7 +117,6 @@ public class LoginDlg extends JDialog {
 						signUpDlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 						signUpDlg.setModal(true);
 						signUpDlg.setVisible(true);
-						
 					}
 				});
 				buttonPane.add(btnNewButton);
@@ -131,35 +130,18 @@ public class LoginDlg extends JDialog {
 						
 						String id = textField.getText();
 						String pw = new String(passwordField.getPassword());
-						 System.out.println("입력한 ID : " + id);
-						 System.out.println("입력한 PW : " +pw);
 						
 						// 로그인 결과 체크
 						int idcheck = dao.logInCheck(id, pw);
-						 System.out.println("로그인Dlg 결과 : " + idcheck);
 						
-						 // 검사 로직은 좀더 생각해봐야함 !!!!
+						 // 검사 로직 : 동일한 아이디와 패스워드인지 검색
 						switch(idcheck){
 							case 0 : 
 								loginID = id;
 								loginPW = pw;
 								LoginDlg.this.dispose();
 								break;
-							case 1 :
-//								JOptionPane.showMessageDialog(LoginDlg.this, "가입되지 않은 ID입니다.",
-//										"로그인 오류", JOptionPane.ERROR_MESSAGE);
-								JOptionPane.showMessageDialog(LoginDlg.this, "로그인 정보를 다시 확인해주세요.",
-										"로그인 오류", JOptionPane.ERROR_MESSAGE);
-								break;
-							case 2 :
-//								JOptionPane.showMessageDialog(LoginDlg.this, "비밀번호를 다시 입력해 주세요.",
-//										"로그인 오류", JOptionPane.ERROR_MESSAGE);
-								JOptionPane.showMessageDialog(LoginDlg.this, "로그인 정보를 다시 확인해주세요.",
-										"로그인 오류", JOptionPane.ERROR_MESSAGE);
-								break;
-							case 3 :
-//								JOptionPane.showMessageDialog(LoginDlg.this, "가입되지 않은 ID입니다.",
-//										"로그인 오류", JOptionPane.ERROR_MESSAGE);
+							default :
 								JOptionPane.showMessageDialog(LoginDlg.this, "로그인 정보를 다시 확인해주세요.",
 										"로그인 오류", JOptionPane.ERROR_MESSAGE);
 								break;

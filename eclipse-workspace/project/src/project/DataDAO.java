@@ -14,7 +14,7 @@ public class DataDAO {
 	
 	public DataDAO() {
 		
-		// 연결을 위한 생성자
+		// 데이터베이스 연결을 위한 변수 선언
 		String url = "jdbc:mysql://localhost:3306/todolist";
 		String user = "root";
 		String password = "123456";
@@ -35,14 +35,12 @@ public class DataDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		// datas 초기화
 		ArrayList<ZipcodeTO> datas = new ArrayList();
 		try {
-			// sql 검색 조건 : 입력한 dong에 해당하는 값을 찾는다.
+			// sql 검색 조건 : 내가 입력한 dong에 해당하는 값을 찾는다.
 			String sql = "select zipcode, sido, gugun, dong, ri, bunji from zipcode where dong like ?";
 			
 			pstmt = conn.prepareStatement(sql);
-			// 입력한 값 을 포함하는 결과를 불러온다.
 			pstmt.setString(1, strDong +"%");
 			
 			rs = pstmt.executeQuery();
@@ -75,14 +73,17 @@ public class DataDAO {
 		String juminSplit[] = jumin.split("");
 		int juminNum[] = new int[13];
 		
-		if(juminSplit.length<13) {
+		// 주민번호가 13자리가 아닌경우
+		if(juminSplit.length != 13) {
 			System.out.println("DAO : 주민번호 자리수가 맞지 않습니다");
 			return false;
 		}
+		// 배열화
 		for(int i=0; i< juminNum.length; i++) {
 			juminNum[ i ] = Integer.parseInt( juminSplit[ i ] );
 		}
 		
+		// 주민번호 검사 로직에 해당하는 계산 실시
 		int juminMulNum[] = {2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5};
 		int checkValue = 0;
 		int checkLogicNum = 11;
@@ -108,7 +109,7 @@ public class DataDAO {
 		ResultSet rs = null;
 
 		try {
-			// 입력한 id값이 있는지 검사
+			// 아이디 중복확인 Dlg에서 입력한 값을 데이터베이스에서 검색
 			String sql = "select * from userdata where id=?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -116,7 +117,7 @@ public class DataDAO {
 			
 			rs = pstmt.executeQuery();
 			
-			// 입력한 값과 출력결과가 같은 경우 생성 불가
+			// 입력한 id가 데이터베이스에 있으면 가입 불가 : false처리
 			while(rs.next()) {
 				if (id.matches(rs.getString("id")) && rs.getString("id").matches(id)) {
 					return false;
@@ -130,7 +131,7 @@ public class DataDAO {
 			if(rs != null) try {rs.close();} catch(SQLException e) {}
 		}
 		
-		// 검사 통과
+		// 검사 통과 : true
 		return true;
 	}
 	
@@ -156,8 +157,7 @@ public class DataDAO {
 			pstmt.setString( 9, extraAddress );
 			
 			int result = pstmt.executeUpdate();
-			System.out.println("데이터 전송 성공 유무" + result);
-			
+			// System.out.println("데이터 전송 성공 유무" + result);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -178,6 +178,10 @@ public class DataDAO {
 			
 			rs = stmt.executeQuery(sql);
 			
+			// 아이디 비번 사이에 연결 문구를 넣어서 검사
+			// -> 예상치 못한 에러 방지
+			// case1 : 아이디 = id123, 비밀번호 = 456
+			// case2 : 아이디 = id1234, 비밀번호 = 56 인경우 같다고 처리되는 것을 방지
 			String idpw = id + "#join#" + pw;
 			
 			while(rs.next()) {
@@ -198,7 +202,7 @@ public class DataDAO {
 			if(rs != null) try {rs.close();} catch(SQLException e) {}
 		}
 		// 둘다 false인 경우
-		return 3;
+		return 1;
 	}
 
 	// 할일 목록 출력
@@ -210,11 +214,10 @@ public class DataDAO {
 		// datas 초기화
 		ArrayList<TodolistTO> datas = new ArrayList();
 		try {
-			// sql 검색 조건
+			// sql 검색 조건 : 완료되지 않고(comthis='false'), 삭제되지 않은(delthis='false') 목록 출력
 			String sql = "select todo, time, comtime from todolist where id =? and comthis='false' and delthis='false'";
 			
 			pstmt = conn.prepareStatement(sql);
-			// 해당 아이디가 가지고 있는 결과를 가져온다.
 			pstmt.setString(1, id);
 			
 			rs = pstmt.executeQuery();
@@ -247,11 +250,10 @@ public class DataDAO {
 		// datas 초기화
 		ArrayList<TodolistTO> datas = new ArrayList();
 		try {
-			// sql 검색 조건 : comthis가 true이나, delthis가 false인 경우
+			// sql 검색 조건 : 완료되었지만(comthis='true') 삭제되지 않은(delthis='false') 경우
 			String sql = "select todo, time, comtime from todolist where id =? and comthis='true' and delthis='false'";
 			
 			pstmt = conn.prepareStatement(sql);
-			// 해당 아이디가 가지고 있는 결과를 가져온다.
 			pstmt.setString(1, id);
 			
 			rs = pstmt.executeQuery();
@@ -284,11 +286,10 @@ public class DataDAO {
 		ArrayList<TodolistTO> datas = new ArrayList();
 	
 		try {
-			// sql 검색 조건 : delthis가 true인경우
+			// sql 검색 조건 : 지워진 목록(delthis='true')인경우를 출력
 			String sql = "select todo, time, comtime from todolist where id =? and delthis='true'";
 			
 			pstmt = conn.prepareStatement(sql);
-			// 해당 아이디가 가지고 있는 결과를 가져온다.
 			pstmt.setString(1, id);
 		
 			rs = pstmt.executeQuery();
@@ -320,18 +321,15 @@ public class DataDAO {
 		ArrayList<TodolistTO> datas = new ArrayList();
 	
 		try {
-			// sql 검색 조건 : delthis가 true인경우
+			// sql 검색 조건 : 할일에 추가할 때는 완료되지 않고(comthis='false'), 삭제되지 않은(delthis='false')상태 이어야한다.
 			String sql = "insert todolist values (?, ?, ?, null, 'false', 'false')";
 			
 			pstmt = conn.prepareStatement(sql);
-			// 해당 아이디가 가지고 있는 결과를 가져온다.
 			pstmt.setString(1, id);
 			pstmt.setString(2, addTodo);
 			pstmt.setString(3, addTime);
 		
-			
 			int result = pstmt.executeUpdate();
-			System.out.println("추가 성공 : " + result);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -348,7 +346,7 @@ public class DataDAO {
 		ResultSet rs = null;
 	
 		try {
-			// sql 검색 조건 : 선택된 [할일목록]과 입력했었던 [시간], [id] 값이 같아야 수정을 실시한다.
+			// sql 검색 조건 : 선택한 [할일]과 입력했었던 [시간], [id] 값이 같아야 한다.
 			String sql = "update todolist set todo=?, time=? where id=? and todo=? and time=? and comthis='false' and delthis='false'";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -378,7 +376,7 @@ public class DataDAO {
 		ResultSet rs = null;
 	
 		try {
-			// sql 검색 조건 : 선택된 list명, 입력했던 시간 을 이용하여 delthis를 true로 변경
+			// sql 검색 조건 : 선택된 [할일], 입력했던 [시간]이 일치하는 데이터의 delthis를 true로 변경
 			String sql = "update todolist set delthis='true' where id=? and todo=? and time=?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -406,13 +404,13 @@ public class DataDAO {
 		ResultSet rs = null;
 	
 		try {
-			// sql 검색 조건 : 선택된 list명, 입력했던 시간 을 이용하여 delthis를 true로 변경
+			// sql 검색 조건 : 선택된 [할일], 입력했던 [시간]과 일치하는 항목의 comthis를 true로 변경후 [완료시간]추가
 			String sql = "update todolist set comthis='true', comtime=? where id=? and todo=? and time=?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
 			// 일치해야하는 데이터 : id, selectTodoList, selectTodoTime
-			// 수정되는 데이터 : delthis = false -> true
+			// 수정되는 데이터 : comthis = false -> true
 			pstmt.setString(1, comTime);
 			pstmt.setString(2, id);
 			pstmt.setString(3, selectTodoList);
@@ -439,7 +437,6 @@ public class DataDAO {
 			// 완료 목록에서 삭제된 항목이면, 완료 목록으로 이동
 			
 			String sql = "";
-			System.out.println(selectTodoComTime);
 			
 			// 삭제목록 -> 할일 목록
 			if(selectTodoComTime == null) {
@@ -490,7 +487,7 @@ public class DataDAO {
 		ResultSet rs = null;
 	
 		try {
-			// sql 검색 조건 : 선택된 list명, 입력했던 시간 을 이용하여 delthis를 true로 변경
+			// sql 검색 조건 : 삭제 목록에서 선택한 행의 [할일], 입력했던 [시간]이 일치하는 행을 delete
 			String sql = "delete from todolist where delthis='true' and id=? and todo=? and time=?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -518,7 +515,7 @@ public class DataDAO {
 		ResultSet rs = null;
 	
 		try {
-			// sql 검색 조건 : 선택된 list명, 입력했던 시간 을 이용하여 delthis를 true로 변경
+			// sql 검색 조건 : 완료 목록의 모든 데이터의 delthis를 'true'로 변경, comthis를 false로 변경
 			String sql = "update todolist set comthis='false', delthis='true' where id=? and comthis='true' and delthis='false'";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -540,12 +537,13 @@ public class DataDAO {
 		}
 	}
 
+	// 삭제 목록 전체 데이터 삭제를 위한 DAO
 	public void delAlldelTodo(String id) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 	
 		try {
-			// sql 검색 조건 : 선택된 list명, 입력했던 시간 을 이용하여 delthis를 true로 변경
+			// sql 검색 조건 : 삭제 목록의 모든 (delthis='true')인 데이터를 delete
 			String sql = "delete from todolist where delthis='true' and id=?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -562,13 +560,14 @@ public class DataDAO {
 		}
 	}
 
+	// 아이디 찾기를 위한 DAO
 	public String findId(String name, String jumin) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String resultId ="";
 		
 		try {
-			// sql 검색 조건 : 이름과 주민번호가 일치하는 결과 출력
+			// sql 검색 조건 : 가입한 이름과 주민번호가 일치하는 결과 출력
 			String sql = "select id from userdata where name=? and jumin=?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -577,7 +576,7 @@ public class DataDAO {
 			
 			rs = pstmt.executeQuery();
 			
-			// 입력한 값과 출력결과가 같은 경우 생성 불가
+			// 여러 아이디를 가입했을시 구분을 위해 "/" 추가
 			while(rs.next()) {
 				resultId += rs.getString("id") + "/";
 			}
@@ -592,13 +591,14 @@ public class DataDAO {
 		return resultId;
 	}
 
+	// 비밀번호 찾기를 위한 DAO
 	public String findPw(String id, String name, String jumin) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String resultPw ="";
 		
 		try {
-			// sql 검색 조건 : 아이디, 이름, 주민번호가 일치하는 결과 출력
+			// sql 검색 조건 : 가입한 아이디, 이름, 주민번호가 일치하는 결과 출력
 			String sql = "select pw from userdata where id=? and name=? and jumin=?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -610,7 +610,7 @@ public class DataDAO {
 			
 			// 입력한 값과 출력결과가 같은 경우 생성 불가
 			while(rs.next()) {
-				resultPw += rs.getString("pw") + "/";
+				resultPw += rs.getString("pw");
 			}
 			
 		} catch (SQLException e) {
@@ -620,6 +620,7 @@ public class DataDAO {
 			if(pstmt != null) try {pstmt.close();} catch(SQLException e) {}
 			if(rs != null) try {rs.close();} catch(SQLException e) {}
 		}
+		// 결과가 없으면 공백 return
 		return resultPw;
 	}
 }
