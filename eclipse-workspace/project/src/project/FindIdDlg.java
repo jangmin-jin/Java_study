@@ -38,6 +38,7 @@ public class FindIdDlg extends JDialog {
 	 * Create the dialog.
 	 */
 	public FindIdDlg() {
+		setTitle("아이디 찾기");
 		setBounds(100, 100, 260, 175);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());

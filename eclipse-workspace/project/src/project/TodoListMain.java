@@ -241,6 +241,8 @@ public class TodoListMain extends JFrame {
 						// 추가항목은 NULL과 공백은 허용하지 않는다.
 						if(addTodo != null) {
 							if(addTodo.trim().equals("")) {
+								JOptionPane.showMessageDialog(TodoListMain.this, "추가할 할일을 입력 해주세요.",
+										"입력 항목 없음", JOptionPane.ERROR_MESSAGE);
 								return;
 							}else {
 								// 데이터베이스에 추가 후 목록 갱신
@@ -254,19 +256,24 @@ public class TodoListMain extends JFrame {
 					// 완료목록 - 복구버튼
 					// 삭제목록 - 복구버튼
 					default :
-						JOptionPane.showMessageDialog(TodoListMain.this, "복구 실행 완료.",
-								"완료", JOptionPane.PLAIN_MESSAGE);
-						
-						// 선택된 행의 정보를 저장
-						String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
-						String selectTodoTime = (String)table.getValueAt(table.getSelectedRow(), 1);
-						String selectTodoComTime = (String)table.getValueAt(table.getSelectedRow(), 2);
-						
-						// 복구 실행 후 목록 갱신
-						DataDAO dao = new DataDAO();
-						dao.restoreTodo(id, selectTodoList, selectTodoTime, selectTodoComTime, listSelect);
-						table.setModel(new CustomTodoModel(id, listSelect));
-						break;
+						if(table.getSelectedRow() < 0) {
+							JOptionPane.showMessageDialog(TodoListMain.this, "복구할 항목을 선택 해주세요.",
+									"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
+						}else {
+							JOptionPane.showMessageDialog(TodoListMain.this, "복구 실행 완료.",
+									"완료", JOptionPane.PLAIN_MESSAGE);
+							
+							// 선택된 행의 정보를 저장
+							String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
+							String selectTodoTime = (String)table.getValueAt(table.getSelectedRow(), 1);
+							String selectTodoComTime = (String)table.getValueAt(table.getSelectedRow(), 2);
+							
+							// 복구 실행 후 목록 갱신
+							DataDAO dao = new DataDAO();
+							dao.restoreTodo(id, selectTodoList, selectTodoTime, selectTodoComTime, listSelect);
+							table.setModel(new CustomTodoModel(id, listSelect));
+							break;
+						}
 					}
 					
 				}
@@ -294,9 +301,11 @@ public class TodoListMain extends JFrame {
 					 * 1. 수정하고자 하는 셀이 선택되어야함.
 					 * 2. 수정하고자 하는 값은 NULL이 될 수 없다.
 					 * 3. 수정하고자 하는 값은 공백이 될 수 없다.
+					 * 4. 선택된 행이 없을시 실행하지 않는다.
 					 */
 					if(table.getSelectedRow() < 0 || modifyTodo == null || modifyTodo.trim().length() < 1) {
-						System.out.println("실행 안함.");
+						JOptionPane.showMessageDialog(TodoListMain.this, "수정할 항목을 선택 해주세요.",
+								"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
 					}else {
 						// 선택된 행의 정보를 저장
 						String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
@@ -339,13 +348,18 @@ public class TodoListMain extends JFrame {
 						
 						// 확인 버튼을 눌렀을 시에만 완전 삭제 실행
 						if(del == 0) {
-							// 선택된 행의 정보를 저장
-							String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
-							String selectTodoTime = (String)table.getValueAt(table.getSelectedRow(), 1);
-							
-							DataDAO dao = new DataDAO();
-							dao.delComTodo(id, selectTodoList, selectTodoTime);
-							table.setModel(new CustomTodoModel(id, listSelect));
+							if(table.getSelectedRow() < 0) {
+								JOptionPane.showMessageDialog(TodoListMain.this, "완전 삭제할 항목을 선택 해주세요.",
+										"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
+							}else {
+								// 선택된 행의 정보를 저장
+								String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
+								String selectTodoTime = (String)table.getValueAt(table.getSelectedRow(), 1);
+								
+								DataDAO dao = new DataDAO();
+								dao.delComTodo(id, selectTodoList, selectTodoTime);
+								table.setModel(new CustomTodoModel(id, listSelect));
+							}
 						}else {
 							return;
 						}
@@ -360,14 +374,20 @@ public class TodoListMain extends JFrame {
 								"삭제 확인", JOptionPane.WARNING_MESSAGE);
 						
 						// 확인 버튼을 눌렀을 시에만 완전 삭제 실행
+						// 선택된 행이 없을시 실행하지 않는다.
 						if(del == 0) {
-							// 선택된 행의 정보를 저장
-							String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
-							String selectTodoTime = (String)table.getValueAt(table.getSelectedRow(), 1);
-							
-							DataDAO dao = new DataDAO();
-							dao.deleteTodo(id, selectTodoList, selectTodoTime);
-							table.setModel(new CustomTodoModel(id, listSelect));
+							if(table.getSelectedRow() < 0) {
+								JOptionPane.showMessageDialog(TodoListMain.this, "삭제할 항목을 선택 해주세요.",
+										"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
+							}else {
+								// 선택된 행의 정보를 저장
+								String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
+								String selectTodoTime = (String)table.getValueAt(table.getSelectedRow(), 1);
+								
+								DataDAO dao = new DataDAO();
+								dao.deleteTodo(id, selectTodoList, selectTodoTime);
+								table.setModel(new CustomTodoModel(id, listSelect));
+							}
 						}else {
 							return;
 						}
@@ -395,23 +415,30 @@ public class TodoListMain extends JFrame {
 					// 할일 목록 - 완료 목록으로 이동
 					switch (listSelect) {
 					case 0:
-						JOptionPane.showMessageDialog(TodoListMain.this, "완료 목록으로 이동합니다.",
-								"완료", JOptionPane.PLAIN_MESSAGE);
-						
-						// 선택된 행의 정보를 저장
-						String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
-						String selectTodoTime = (String)table.getValueAt(table.getSelectedRow(), 1);
-						
-						// 완료된 시간
-						SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-						Calendar time = Calendar.getInstance();
-						String comTime = format.format(time.getTime());
-						
-						// 완료 목록으로 이동
-						dao.completeTodo(id, selectTodoList, selectTodoTime, comTime);
-						// 목록 갱신
-						table.setModel(new CustomTodoModel(id, listSelect));
-						break;
+						// 선택된 행이 없을시 실행하지 않는다.
+						if(table.getSelectedRow() < 0) {
+							JOptionPane.showMessageDialog(TodoListMain.this, "완료할 항목을 선택 해주세요.",
+									"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
+							break;
+						}else {
+							JOptionPane.showMessageDialog(TodoListMain.this, "완료 목록으로 이동합니다.",
+									"완료", JOptionPane.PLAIN_MESSAGE);
+							
+							// 선택된 행의 정보를 저장
+							String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
+							String selectTodoTime = (String)table.getValueAt(table.getSelectedRow(), 1);
+							
+							// 완료된 시간
+							SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+							Calendar time = Calendar.getInstance();
+							String comTime = format.format(time.getTime());
+							
+							// 완료 목록으로 이동
+							dao.completeTodo(id, selectTodoList, selectTodoTime, comTime);
+							// 목록 갱신
+							table.setModel(new CustomTodoModel(id, listSelect));
+							break;
+						}
 						
 					// 완료 목록 - 전체 삭제 목록으로 이동
 					case 1:

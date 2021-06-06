@@ -39,6 +39,7 @@ public class FindPwDlg extends JDialog {
 	 * Create the dialog.
 	 */
 	public FindPwDlg() {
+		setTitle("비밀번호 찾기");
 		setBounds(100, 100, 260, 200);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
