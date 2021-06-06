@@ -98,11 +98,6 @@ public class ZipcodeSearchDlg extends JDialog {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						
-						// 선택된 행에 따른 전체 열의 결과를 본다.
-						// for(int i=0; i<6; i++) {
-						//	 System.out.println(table.getValueAt(table.getSelectedRow(), i));
-						// }
-						
 						// ***-*** 형식의 zipcode를 -를 기준으로 찢어서 넣어준다.
 						String zipcode[] = ((String)table.getValueAt(table.getSelectedRow(), 0)).split("-");
 						zipcode1 = zipcode[0];

@@ -8,16 +8,23 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JPasswordField;
+import java.awt.Color;
 
 public class LoginDlg extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
-	private JTextField textField_1;
-
+	private JPasswordField passwordField;
+	
+	// 아이디와 비밀번호
+	public String loginID = "";
+	public String loginPW = "";
+	
 	/**
 	 * Launch the application.
 	 */
@@ -59,10 +66,43 @@ public class LoginDlg extends JDialog {
 			textField.setColumns(10);
 		}
 		{
-			textField_1 = new JTextField();
-			textField_1.setColumns(10);
-			textField_1.setBounds(71, 63, 160, 21);
-			contentPanel.add(textField_1);
+			passwordField = new JPasswordField();
+			passwordField.setBounds(71, 66, 160, 21);
+			contentPanel.add(passwordField);
+		}
+		
+		JLabel lblID = new JLabel("아이디 찾기");
+		lblID.setForeground(Color.BLUE);
+		lblID.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				FindIdDlg findId = new FindIdDlg();
+				findId.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				findId.setModal(true);
+				findId.setVisible(true);
+			}
+		});
+		lblID.setBounds(100, 5, 74, 15);
+		contentPanel.add(lblID);
+		{
+			JLabel lblPW = new JLabel("비밀번호 찾기");
+			lblPW.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					FindPwDlg findPw = new FindPwDlg();
+					findPw.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					findPw.setModal(true);
+					findPw.setVisible(true);
+				}
+			});
+			lblPW.setForeground(Color.BLUE);
+			lblPW.setBounds(170, 5, 87, 15);
+			contentPanel.add(lblPW);
+		}
+		{
+			JLabel lblNewLabel_3 = new JLabel("/");
+			lblNewLabel_3.setBounds(164, 5, 28, 15);
+			contentPanel.add(lblNewLabel_3);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -87,8 +127,44 @@ public class LoginDlg extends JDialog {
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						DataDAO dao = new DataDAO();
 						
-						LoginDlg.this.dispose();
+						String id = textField.getText();
+						String pw = new String(passwordField.getPassword());
+						 System.out.println("입력한 ID : " + id);
+						 System.out.println("입력한 PW : " +pw);
+						
+						// 로그인 결과 체크
+						int idcheck = dao.logInCheck(id, pw);
+						 System.out.println("로그인Dlg 결과 : " + idcheck);
+						
+						 // 검사 로직은 좀더 생각해봐야함 !!!!
+						switch(idcheck){
+							case 0 : 
+								loginID = id;
+								loginPW = pw;
+								LoginDlg.this.dispose();
+								break;
+							case 1 :
+//								JOptionPane.showMessageDialog(LoginDlg.this, "가입되지 않은 ID입니다.",
+//										"로그인 오류", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(LoginDlg.this, "로그인 정보를 다시 확인해주세요.",
+										"로그인 오류", JOptionPane.ERROR_MESSAGE);
+								break;
+							case 2 :
+//								JOptionPane.showMessageDialog(LoginDlg.this, "비밀번호를 다시 입력해 주세요.",
+//										"로그인 오류", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(LoginDlg.this, "로그인 정보를 다시 확인해주세요.",
+										"로그인 오류", JOptionPane.ERROR_MESSAGE);
+								break;
+							case 3 :
+//								JOptionPane.showMessageDialog(LoginDlg.this, "가입되지 않은 ID입니다.",
+//										"로그인 오류", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(LoginDlg.this, "로그인 정보를 다시 확인해주세요.",
+										"로그인 오류", JOptionPane.ERROR_MESSAGE);
+								break;
+						}
+						
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -109,5 +185,4 @@ public class LoginDlg extends JDialog {
 			}
 		}
 	}
-
 }

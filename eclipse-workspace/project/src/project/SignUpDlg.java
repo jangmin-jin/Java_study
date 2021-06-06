@@ -21,21 +21,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JFormattedTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 
 public class SignUpDlg extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textFieldID;
-	private JTextField textFieldPW;
 	private JTextField textFieldName;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField textFieldJuminFront;
-	private JTextField textFieldJuminBack;
 	private JTextField textFieldEmailFront;
 	private JTextField textFieldEmailBack;
 	private JTextField textFieldZipcode;
-	private JTextField textFieldDetailAddress;
 	private JTextField textFieldExtraAddress;
+	private JRadioButton rdbtnWoman;
+	private JRadioButton rdbtnMan;
+	private JPasswordField textFieldPW;
+	private JTextPane textPaneAddress;
+	private JPasswordField textFieldJuminBack;
 
 	/**
 	 * Launch the application.
@@ -45,6 +51,7 @@ public class SignUpDlg extends JDialog {
 			SignUpDlg dialog = new SignUpDlg();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -79,12 +86,6 @@ public class SignUpDlg extends JDialog {
 			contentPanel.add(lblNewLabel);
 		}
 		{
-			textFieldPW = new JTextField();
-			textFieldPW.setColumns(10);
-			textFieldPW.setBounds(80, 51, 116, 21);
-			contentPanel.add(textFieldPW);
-		}
-		{
 			JLabel lblNewLabel = new JLabel("이름");
 			lblNewLabel.setBounds(12, 82, 57, 15);
 			contentPanel.add(lblNewLabel);
@@ -96,12 +97,13 @@ public class SignUpDlg extends JDialog {
 			contentPanel.add(textFieldName);
 		}
 		
-		JRadioButton rdbtnWoman = new JRadioButton("여성");
+		rdbtnWoman = new JRadioButton("여성");
+		rdbtnWoman.setSelected(true);
 		buttonGroup.add(rdbtnWoman);
 		rdbtnWoman.setBounds(80, 106, 57, 23);
 		contentPanel.add(rdbtnWoman);
 		
-		JRadioButton rdbtnMan = new JRadioButton("남성");
+		rdbtnMan = new JRadioButton("남성");
 		buttonGroup.add(rdbtnMan);
 		rdbtnMan.setBounds(141, 106, 57, 23);
 		contentPanel.add(rdbtnMan);
@@ -141,12 +143,6 @@ public class SignUpDlg extends JDialog {
 			JLabel lblNewLabel_2 = new JLabel("-");
 			lblNewLabel_2.setBounds(162, 138, 14, 15);
 			contentPanel.add(lblNewLabel_2);
-		}
-		{
-			textFieldJuminBack = new JTextField();
-			textFieldJuminBack.setColumns(10);
-			textFieldJuminBack.setBounds(177, 135, 75, 21);
-			contentPanel.add(textFieldJuminBack);
 		}
 		{
 			JLabel lblNewLabel_1 = new JLabel("이메일");
@@ -198,6 +194,7 @@ public class SignUpDlg extends JDialog {
 			panel.add(lblNewLabel_1);
 			
 			textFieldZipcode = new JTextField();
+			textFieldZipcode.setEditable(false);
 			textFieldZipcode.setBounds(74, 18, 116, 21);
 			panel.add(textFieldZipcode);
 			textFieldZipcode.setColumns(10);
@@ -206,15 +203,17 @@ public class SignUpDlg extends JDialog {
 			btnZipcodeSearch.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					// 우편번호 검색기 Dlg 실행
 					ZipcodeSearchDlg zipcodeDlg = new ZipcodeSearchDlg();
 					zipcodeDlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					zipcodeDlg.setModal(true);
 					zipcodeDlg.setVisible(true);
 					
+					// 우편번호 결과를 회원가입창 필드에 자동 입력
 					String zipcode = zipcodeDlg.zipcode1 + zipcodeDlg.zipcode2;
 					String address = zipcodeDlg.address;
 					textFieldZipcode.setText(zipcode);
-					textFieldDetailAddress.setText(address);
+					textPaneAddress.setText(address);
 				}
 			});
 			btnZipcodeSearch.setBounds(202, 17, 122, 23);
@@ -223,11 +222,6 @@ public class SignUpDlg extends JDialog {
 			JLabel lblNewLabel_1_1 = new JLabel("상세 주소");
 			lblNewLabel_1_1.setBounds(6, 49, 57, 15);
 			panel.add(lblNewLabel_1_1);
-			
-			textFieldDetailAddress = new JTextField();
-			textFieldDetailAddress.setBounds(74, 46, 373, 42);
-			panel.add(textFieldDetailAddress);
-			textFieldDetailAddress.setColumns(10);
 			{
 				JLabel lblNewLabel_1_2 = new JLabel("나머지 주소");
 				lblNewLabel_1_2.setBounds(6, 101, 75, 15);
@@ -239,6 +233,20 @@ public class SignUpDlg extends JDialog {
 				panel.add(textFieldExtraAddress);
 				textFieldExtraAddress.setColumns(10);
 			}
+			
+			textPaneAddress = new JTextPane();
+			textPaneAddress.setEditable(false);
+			textPaneAddress.setBounds(74, 49, 372, 42);
+			panel.add(textPaneAddress);
+		}
+		
+		textFieldPW = new JPasswordField();
+		textFieldPW.setBounds(80, 51, 116, 21);
+		contentPanel.add(textFieldPW);
+		{
+			textFieldJuminBack = new JPasswordField();
+			textFieldJuminBack.setBounds(177, 135, 75, 21);
+			contentPanel.add(textFieldJuminBack);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -249,38 +257,66 @@ public class SignUpDlg extends JDialog {
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						
+						// DAO 호출
 						DataDAO dao = new DataDAO();
 						
-						// 주민번호 체크 로직이 들어가야함
 						// 필수 요소들이 없으면 에러 - 데이터베이스에 추가 되지 않아야함.
-						String id = textFieldID.getText().trim();
-						String pw = textFieldPW.getText().trim();
+						String id = textFieldID.getText();
+						String pw = new String(textFieldPW.getPassword());
 						String name = textFieldName.getText().trim();
 						
+						String sex = "";
+						if(rdbtnWoman.getSelectedObjects() != null) {
+							sex = rdbtnWoman.getText();
+						} else {
+							sex = rdbtnMan.getText();
+						}
+
 						// 주민번호는 형식 체크
-						String jumin = textFieldJuminFront.getText().trim() + textFieldJuminBack.getText().trim();
+						String juminFront = textFieldJuminFront.getText().trim();
+						String juminBack = new String(textFieldJuminBack.getPassword()).trim();
+						String jumin = juminFront + juminBack;
+						String juminSex = juminBack.substring(0, 1);
+						
 						Boolean juminResult = dao.jumincheck(jumin);
 						
 						// 입력 자유 항목들
 						String email = textFieldEmailFront.getText().trim() + "@" + textFieldEmailBack.getText().trim();
 						String zipcode = textFieldZipcode.getText().trim();
-						String address = textFieldDetailAddress.getText().trim() + " " + textFieldExtraAddress.getText().trim();
+						String address = textPaneAddress.getText().trim();
+						String extraAddress = textFieldExtraAddress.getText().trim();
+						System.out.println(sex);
+						System.out.println(juminSex);
 						
 						// 필수 입력 항목 검사
 						if(id.length() == 0) {
+							// 아이디 검사
 							JOptionPane.showMessageDialog(SignUpDlg.this, "아이디를 입력해 주세요.",
 									"아이디 입력 누락", JOptionPane.WARNING_MESSAGE);
-						} else if(pw.length() == 0) {
+						}else if(pw.length() == 0) {
+							// 비밀번호 검사 - 입력이 누락된 경우
 							JOptionPane.showMessageDialog(SignUpDlg.this, "비밀번호를 입력해 주세요.",
 									"비밀번호 입력 누락", JOptionPane.WARNING_MESSAGE);
-						} else if(name.length() == 0) {
+						}else if(pw.contains(" ")) {
+							// 비밀번호 검사 - 공백이 포함된 경우
+							JOptionPane.showMessageDialog(SignUpDlg.this, "비밀번호에는 공백이 포함될 수 없습니다.",
+									"비밀번호 입력 누락", JOptionPane.WARNING_MESSAGE);
+						}else if(name.length() == 0) {
+							// 이름 검사 - 이름이 누락된 경우
 							JOptionPane.showMessageDialog(SignUpDlg.this, "이름 입력해 주세요.",
 									"이름 입력 누락", JOptionPane.WARNING_MESSAGE);
-						} else if(juminResult == false) {
+						}else if(juminResult == false) {
+							// 주민번호 검사 - 주민번호가 틀린 경우
 							JOptionPane.showMessageDialog(SignUpDlg.this, "주민번호를 확인해 주세요.",
 									"주민번호 검사", JOptionPane.WARNING_MESSAGE);
-						} else {
+						}else if(sex.equals("여성") && juminSex.equals("1") || sex.equals("여성") && juminSex.equals("3")) {
+							// 성별 검사 - 주민번호와 성별이 다른경우
+							JOptionPane.showMessageDialog(SignUpDlg.this, "주민번호 혹은 성별을 확인해 주세요.",
+									"성별 불일치", JOptionPane.WARNING_MESSAGE);
+						}else if(sex.equals("남성") && juminSex.equals("2") || sex.equals("남성") && juminSex.equals("4")) {
+							JOptionPane.showMessageDialog(SignUpDlg.this, "주민번호 혹은 성별을 확인해 주세요.",
+									"성별 불일치", JOptionPane.WARNING_MESSAGE);
+						}else {
 							// 자유 항목들 입력 안했으면 null 주기
 							if(email.length() == 1) {
 								email = null;
@@ -288,23 +324,30 @@ public class SignUpDlg extends JDialog {
 							if(zipcode.length() == 0) {
 								zipcode = null;
 							}
-							if(address.length() == 1) {
+							if(address.length() == 0) {
 								address = null;
 							}
+							if(extraAddress.length() == 0) {
+								extraAddress = null;
+							}
 							
-//							id, pw, name, jumin, email, zipcode, address
-							dao.idCheck(id);
-							
+							// 최종 확인
 							int result = JOptionPane.showConfirmDialog(SignUpDlg.this, "회원가입 하시겠습니까?",
-									"회원가입 확인", JOptionPane.PLAIN_MESSAGE);
+									"회원가입 확인", JOptionPane.WARNING_MESSAGE);
 							
-							if(result == JOptionPane.YES_OPTION) {
-								SignUpDlg.this.dispose();
-							} 
+							if(result == 0) {
+								// 완료 창 출력
+								JOptionPane.showConfirmDialog(SignUpDlg.this, "회원가입이 완료되었습니다",
+										"회원가입 확인", JOptionPane.PLAIN_MESSAGE);
+								// 데이터베이스에 정보 전달
+								// id, pw, name, sex, jumin, email, zipcode, address, extraAddress;
+								// 회원 가입 절차 진행
+								dao.signUp(id, pw, name, sex, jumin, email, zipcode, address, extraAddress);
+							}else {
+								return;
+							}
 							
-							// 최종 확인후 회원가입 완료 메세지 출력
-							JOptionPane.showConfirmDialog(SignUpDlg.this, "회원가입이 완료되었습니다",
-									"회원가입 확인", JOptionPane.PLAIN_MESSAGE);
+							SignUpDlg.this.dispose();
 						}
 					}
 				});

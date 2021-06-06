@@ -66,17 +66,25 @@ public class IdCheckDlg extends JDialog {
 						DataDAO dao = new DataDAO();
 						String fieldId = textField.getText();
 						
-						Boolean idCheck = dao.idCheck(fieldId);
-						
-						if(idCheck != true) {
-							JOptionPane.showMessageDialog(IdCheckDlg.this, "중복되는 아이디 입니다.", 
+						if(fieldId.contains(" ")) {
+							JOptionPane.showMessageDialog(IdCheckDlg.this, "공백은 사용할 수 없습니다.", 
 									"아이디 중복확인", JOptionPane.ERROR_MESSAGE);
-							textField.setText("");
+						}else if(fieldId.equals("")) {
+							JOptionPane.showMessageDialog(IdCheckDlg.this, "사용할 아이디를 입력하세요.", 
+									"아이디 중복확인", JOptionPane.ERROR_MESSAGE);
 						}else {
-							idCheckResult = fieldId;
-							JOptionPane.showMessageDialog(IdCheckDlg.this, "사용할 수 있는 아이디 입니다.", 
-									"아이디 중복확인", JOptionPane.PLAIN_MESSAGE);
-							IdCheckDlg.this.dispose();
+							Boolean idCheck = dao.idCheck(fieldId);
+							
+							if(idCheck != true) {
+								JOptionPane.showMessageDialog(IdCheckDlg.this, "중복되는 아이디 입니다.", 
+										"아이디 중복확인", JOptionPane.ERROR_MESSAGE);
+								textField.setText("");
+							}else {
+								idCheckResult = fieldId;
+								JOptionPane.showMessageDialog(IdCheckDlg.this, "사용할 수 있는 아이디 입니다.", 
+										"아이디 중복확인", JOptionPane.PLAIN_MESSAGE);
+								IdCheckDlg.this.dispose();
+							}
 						}
 						
 					}
