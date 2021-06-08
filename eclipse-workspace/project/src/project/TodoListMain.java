@@ -304,9 +304,12 @@ public class TodoListMain extends JFrame {
 					 * 3. 수정하고자 하는 값은 공백이 될 수 없다.
 					 * 4. 선택된 행이 없을시 실행하지 않는다.
 					 */
-					if(table.getSelectedRow() < 0 || modifyTodo == null || modifyTodo.trim().length() < 1) {
+					if(table.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(TodoListMain.this, "수정할 항목을 선택 해주세요.",
 								"지정 항목 없음", JOptionPane.ERROR_MESSAGE);
+					}else if(modifyTodo == null || modifyTodo.trim().length() < 1){
+						JOptionPane.showMessageDialog(TodoListMain.this, "수정할 내용을 입력 해주세요.",
+								"입력값 없음", JOptionPane.ERROR_MESSAGE);
 					}else {
 						// 선택된 행의 정보를 저장
 						String selectTodoList = (String)table.getValueAt(table.getSelectedRow(), 0);
@@ -492,11 +495,20 @@ public class TodoListMain extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// 현재 유저 정보 초기화
-				id = null;
-				pw = null;
-				textFieldNowLoginId.setText(id);
-				// 목록 갱신
-				table.setModel(new CustomTodoModel(id, listSelect));
+				
+				int logout = JOptionPane.showConfirmDialog(TodoListMain.this, "로그아웃 하시겠습니까?",
+						"로그아웃", JOptionPane.ERROR_MESSAGE);
+				
+				if(logout == 0) {
+					id = null;
+					pw = null;
+					textFieldNowLoginId.setText(id);
+					// 목록 갱신
+					table.setModel(new CustomTodoModel(id, listSelect));
+				}else {
+					return;
+				}
+
 			}
 		});
 		btnLogout.setBounds(750, 10, 120, 40);

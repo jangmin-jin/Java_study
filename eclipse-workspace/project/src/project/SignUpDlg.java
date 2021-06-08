@@ -279,8 +279,12 @@ public class SignUpDlg extends JDialog {
 						String juminFront = textFieldJuminFront.getText().trim();
 						String juminBack = new String(textFieldJuminBack.getPassword()).trim();
 						String jumin = juminFront + juminBack;
-						String juminSex = juminBack.substring(0, 1);
 						
+						String juminSex = null;
+						if(!jumin.equals("")) {
+							juminSex = juminBack.substring(0, 1);
+						}
+
 						Boolean juminResult = dao.jumincheck(jumin);
 						
 						// 입력 자유 항목들
